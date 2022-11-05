@@ -3,7 +3,7 @@ import models.*
 
 fun main(args: Array<String>) {
 
-    PythonScript("scripts/hazm_lib.py").call(listOf("----", "چه گل های زیبایی.")).let {
+    PythonScript("scripts/hazm_lib.py").call(listOf("NR--", "چه گل های و از که زیبایی.")).let {
         println(it)
     }
 

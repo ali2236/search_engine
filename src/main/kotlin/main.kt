@@ -1,11 +1,13 @@
 import engines.SE0
-import models.DocumentDirectory
-import models.QueryDirectory
-import models.RelevanceAssessmentFile
-import models.RelevanceAssessor
+import models.*
 
 fun main(args: Array<String>) {
 
+    PythonScript("scripts/hazm.py").call(listOf("----", "چه گل های زیبایی.")).let {
+        println(it)
+    }
+
+    return
     val totalDocuments = DocumentDirectory("data/Poems").documents.size
 
     val engine = SE0()

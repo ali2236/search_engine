@@ -1,5 +1,4 @@
-from hazm import *
-import sys
+import hazm
 
 print("hi from python")
 print("bye")

@@ -1,13 +1,12 @@
 package models
 
 class RelevanceAssessor(
-    private val queries: QueryDirectory,
     private val relevanceAssessment: RelevanceAssessmentFile,
 ) {
 
     val results = mutableMapOf<String, List<RelevanceResult>>()
 
-    fun test(searchEngine: SearchEngine) {
+    fun test(searchEngine: SearchEngine, queries : QueryDirectory) {
         results[searchEngine.getName()] = relevanceAssessment.assessments
             .map { ra ->
                 val query = queries.get(ra.queryId).toString()

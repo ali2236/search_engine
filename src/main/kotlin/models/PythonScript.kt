@@ -1,25 +1,15 @@
 package models
 
-import java.io.File
-import java.util.concurrent.TimeUnit
+class PythonScript(path: String, args: List<String>) {
 
-class PythonScript(private val path: String) {
+    private val process = ProcessBuilder(listOf("python", path) + args)
+        .redirectOutput(ProcessBuilder.Redirect.PIPE)
+        .redirectError(ProcessBuilder.Redirect.PIPE)
+        .start()
 
-    fun call(args: List<String>): String? {
-        return (listOf("python", path) + args).runCommand()
+    fun call(text: String): String {
+        process.outputWriter().buffered().write(text)
+        return process.inputReader(Charsets.UTF_8).buffered().readText()
     }
 
 }
-
-private fun List<String>.runCommand(
-    workingDir: File = File("."),
-    timeoutAmount: Long = 60,
-    timeoutUnit: TimeUnit = TimeUnit.SECONDS
-): String? = runCatching {
-    ProcessBuilder(this)
-        .directory(workingDir)
-        .redirectOutput(ProcessBuilder.Redirect.PIPE)
-        .redirectError(ProcessBuilder.Redirect.PIPE)
-        .start().also { it.waitFor(timeoutAmount, timeoutUnit) }
-        .inputReader(Charsets.UTF_8).buffered().readText()
-}.onFailure { it.printStackTrace() }.getOrNull()

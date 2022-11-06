@@ -1,31 +1,46 @@
 import sys
 import hazm
 import stopwords
-
-sys.stdout.reconfigure(encoding='utf-8')
+import os
 
 ops = sys.argv[1]
-text = sys.argv[2]
+docs = f"../data/{sys.argv[2]}"
+output = f"../processed/hazm/{sys.argv[2]}"
 
-if "N" in ops:
-    text = hazm.Normalizer().normalize(text)
+stop_words = stopwords.get_stopwords()
 
-tokens = hazm.WordTokenizer().tokenize(text)
+def process(text):
+    if "N" in ops:
+        text = hazm.Normalizer().normalize(text)
 
-if "R" in ops:
-    stop_words = stopwords.get_stopwords()
-    filtered_tokens = [w for w in tokens if w not in stop_words]
-    tokens = filtered_tokens
+    tokens = hazm.WordTokenizer().tokenize(text)
 
-if "S" in ops:
-    stemmer = hazm.Stemmer()
-    stemmed_tokens = [stemmer.stem(w) for w in tokens]
-    tokens = stemmed_tokens
+    if "R" in ops:
+        filtered_tokens = [w for w in tokens if w not in stop_words]
+        tokens = filtered_tokens
 
-if "L" in ops:
-    lemmatizer = hazm.Lemmatizer()
-    lemmatized_tokens = [lemmatizer.lemmatize(w) for w in tokens]
-    tokens = lemmatized_tokens
+    if "S" in ops:
+        stemmer = hazm.Stemmer()
+        stemmed_tokens = [stemmer.stem(w) for w in tokens]
+        tokens = stemmed_tokens
 
-text = " ".join(tokens)
-print(text)
+    if "L" in ops:
+        lemmatizer = hazm.Lemmatizer()
+        lemmatized_tokens = [lemmatizer.lemmatize(w) for w in tokens]
+        tokens = lemmatized_tokens
+
+    text = " ".join(tokens)
+    return text
+
+
+output = os.path.join(output, ops)
+if not os.path.exists(output):
+    os.mkdir(output)
+    documents = os.listdir(docs)
+    for doc in documents:
+        with open(os.path.join(docs, doc), 'r', encoding='utf8') as d:
+            t = d.read()
+            pt = process(t)
+            with open(os.path.join(output, doc), 'w', encoding='utf8') as pd:
+                pd.write(pt)
+                print(f'{doc} processed')

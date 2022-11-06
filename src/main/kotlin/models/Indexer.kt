@@ -12,7 +12,7 @@ import org.apache.lucene.store.FSDirectory
 import java.io.Closeable
 import kotlin.io.path.Path
 
-class Indexer(id: String, private val preProcessor: PreProcessor) : Closeable {
+class Indexer(id: String) : Closeable {
 
     private val indexDirectory: Directory
     private var indexer: IndexWriter
@@ -31,7 +31,7 @@ class Indexer(id: String, private val preProcessor: PreProcessor) : Closeable {
 
     fun index(directoryPath: String) {
         DocumentDirectory(directoryPath).documents
-            .map { it.toDocument(preProcessor) }
+            .map { it.toDocument() }
             .forEach { doc -> indexer.addDocument(doc) }
         indexer.flush()
         indexer.close()

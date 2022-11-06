@@ -14,10 +14,11 @@ class DocumentFile(
     val file: File
         get() = File(path)
 
-    fun toDocument(preProcessor: PreProcessor): Document = Document().apply {
+    fun toDocument(): Document = Document().apply {
+        println("creating document $id")
         add(StringField("id", id, Field.Store.YES))
         add(StringField("path", path, Field.Store.YES))
-        add(TextField("content", preProcessor(file.readText()).reader()))
+        add(TextField("content", file.reader()))
     }
 
     override fun toString(): String {

@@ -1,25 +1,25 @@
 package engines
 
 import models.Indexer
-import models.PreProcessor
 import models.SearchEngine
-import models.hazm
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.IndexSearcher
 
-class BaseSearchEngine(private val indexName: String, private val preProcessor: PreProcessor) : SearchEngine {
+class BaseSearchEngine(private val indexName: String, private val path: String) : SearchEngine {
 
     private lateinit var indexDirectory: DirectoryReader
 
     override fun getName(): String = indexName
 
     override fun index() {
-        indexDirectory = Indexer(getName(), preProcessor).let {
-            it.index("data/Poems")
+        println("${getName()}: indexing...")
+        indexDirectory = Indexer(getName()).let {
+            it.index(path)
             it.directory
         }
+        println("${getName()}: indexing done!")
     }
 
     override fun query(query: String): List<String> {

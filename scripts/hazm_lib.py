@@ -10,16 +10,22 @@ text = sys.argv[2]
 if "N" in ops:
     text = hazm.Normalizer().normalize(text)
 
+tokens = hazm.WordTokenizer().tokenize(text)
+
 if "R" in ops:
-    tokens = hazm.WordTokenizer().tokenize(text)
     stop_words = stopwords.get_stopwords()
     filtered_tokens = [w for w in tokens if w not in stop_words]
-    text = " ".join(filtered_tokens)
+    tokens = filtered_tokens
 
 if "S" in ops:
-    text = hazm.Stemmer().stem(text)
+    stemmer = hazm.Stemmer()
+    stemmed_tokens = [stemmer.stem(w) for w in tokens]
+    tokens = stemmed_tokens
 
 if "L" in ops:
-    text = hazm.Lemmatizer().lemmatize(text)
+    lemmatizer = hazm.Lemmatizer()
+    lemmatized_tokens = [lemmatizer.lemmatize(w) for w in tokens]
+    tokens = lemmatized_tokens
 
+text = " ".join(tokens)
 print(text)

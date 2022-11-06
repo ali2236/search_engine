@@ -1,5 +1,7 @@
 package models
 
+import org.apache.lucene.analysis.Analyzer
+import org.apache.lucene.analysis.core.SimpleAnalyzer
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.index.DirectoryReader
@@ -10,7 +12,7 @@ import org.apache.lucene.store.FSDirectory
 import java.io.Closeable
 import kotlin.io.path.Path
 
-class Indexer(private val id: String) : Closeable {
+class Indexer(id: String, private val preProcessor: PreProcessor) : Closeable {
 
     private val indexDirectory: Directory
     private var indexer: IndexWriter
@@ -20,8 +22,7 @@ class Indexer(private val id: String) : Closeable {
 
     init {
         indexDirectory = FSDirectory.open(Path("indexes/$id"))
-        val analyzer = StandardAnalyzer()
-        val config = IndexWriterConfig(analyzer)
+        val config = IndexWriterConfig(WhitespaceAnalyzer())
             .apply {
                 openMode = IndexWriterConfig.OpenMode.CREATE
             }
@@ -30,7 +31,7 @@ class Indexer(private val id: String) : Closeable {
 
     fun index(directoryPath: String) {
         DocumentDirectory(directoryPath).documents
-            .map { it.toDocument() }
+            .map { it.toDocument(preProcessor) }
             .forEach { doc -> indexer.addDocument(doc) }
         indexer.flush()
         indexer.close()

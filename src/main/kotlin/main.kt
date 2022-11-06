@@ -1,16 +1,15 @@
-import engines.SE0
 import models.*
 
 fun main(args: Array<String>) {
 
-    PythonScript("scripts/hazm_lib.py").call(listOf("NR", "چه گل های و از که زیبایی.")).let {
+/*    PythonScript("scripts/hazm_lib.py").call(listOf("NR", "چه گل های و از که زیبایی.")).let {
         println(it)
     }
 
-    return
+    return*/
     val totalDocuments = DocumentDirectory("data/Poems").documents.size
 
-    val engine = SE0()
+    val engine = SE1()
     // create indexer
     engine.index()
 

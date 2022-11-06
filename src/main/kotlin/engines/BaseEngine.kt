@@ -1,20 +1,22 @@
 package engines
 
 import models.Indexer
+import models.PreProcessor
 import models.SearchEngine
-import org.apache.lucene.analysis.core.WhitespaceAnalyzer
+import models.hazm
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.IndexSearcher
 
-class SE0 : SearchEngine {
-    override fun getName(): String = "SE0"
+class BaseSearchEngine(private val indexName: String, private val preProcessor: PreProcessor) : SearchEngine {
 
     private lateinit var indexDirectory: DirectoryReader
 
+    override fun getName(): String = indexName
+
     override fun index() {
-        indexDirectory = Indexer("SE0").let {
+        indexDirectory = Indexer(getName(), preProcessor).let {
             it.index("data/Poems")
             it.directory
         }
@@ -29,5 +31,4 @@ class SE0 : SearchEngine {
             searcher.doc(it.doc).get("id")
         }
     }
-
 }

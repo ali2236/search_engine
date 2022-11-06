@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit
 class PythonScript(private val path: String) {
 
     fun call(args: List<String>): String? {
-        return (listOf("py", path) + args).runCommand()
+        return (listOf("python", path) + args).runCommand()
     }
 
 }

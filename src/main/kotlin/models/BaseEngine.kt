@@ -7,16 +7,18 @@ import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.IndexSearcher
 
-class BaseSearchEngine(private val indexName: String, private val path: String) : SearchEngine {
+class BaseSearchEngine(private val indexName: String, val pathBuilder: (String) -> String) : SearchEngine {
 
     private lateinit var indexDirectory: DirectoryReader
 
     override fun getName(): String = indexName
 
-    override fun index() {
+    override fun index(skip: Boolean) {
         println("${getName()}: indexing...")
         indexDirectory = Indexer(getName()).let {
-            it.index(path)
+            if(!skip) {
+                it.index(pathBuilder("Poems"))
+            }
             it.directory
         }
         println("${getName()}: indexing done!")

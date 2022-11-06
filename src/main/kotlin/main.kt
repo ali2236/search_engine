@@ -5,7 +5,7 @@ fun main(args: Array<String>) {
     val totalDocuments = DocumentDirectory("data/Poems").documents.size
 
     val engines = listOf(
-        BaseSearchEngine("SE0", "data/Poems"),
+        BaseSearchEngine("SE0") { t -> "data/$t" },
         BaseSearchEngine("SE1", hazm("NT--")),
         BaseSearchEngine("SE1p", parsivar("NT--")),
         BaseSearchEngine("SE2", hazm("NTR-")),
@@ -15,18 +15,22 @@ fun main(args: Array<String>) {
         BaseSearchEngine("SE4", hazm("NT-S")),
         BaseSearchEngine("SE4p", hazm("NTRS")),
     ).onEach {
-        // comment this line if index exists
-        it.index()
+        // set to [true] if index exists
+        it.index(true)
     }
 
-    println("done")
-
-/*    // Test
+    // Test
     val ra = RelevanceAssessmentFile("data/RelevanceAssesment/RelevanceAssesment", totalDocuments)
-    val queries = QueryDirectory("data/Queries")
-    val assessor = RelevanceAssessor(queries, ra)
+    val assessor = RelevanceAssessor(ra)
 
-    assessor.test(engine)
-    println(assessor.results)
-    println(assessor.getMeanResult(engine.getName()))*/
+    engines.forEach {
+        println("assessing ${it.getName()}")
+        val queries = QueryDirectory(it.pathBuilder("Queries"))
+        assessor.test(it, queries)
+        println(assessor.results)
+        println(assessor.getMeanResult(it.getName()))
+    }
+
+
+
 }

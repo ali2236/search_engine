@@ -1,4 +1,4 @@
-python hazm_lib.py NT-- Poems [ ]
+python hazm_lib.py NT-- Poems [x]
 python hazm_lib.py NT-- Queries [ ]
 python parsivar_lib.py NT-- Poems [x]
 python parsivar_lib.py NT-- Queries [x]

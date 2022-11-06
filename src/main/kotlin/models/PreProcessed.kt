@@ -1,9 +1,10 @@
 package models
 
-fun hazm(ops: String, type: String="Poems"): String {
-    return "processed/hazm/$type/$ops"
+fun hazm(ops: String): (String) -> String {
+    return { type -> "processed/hazm/$type/$ops" }
 }
-fun parsivar(ops: String, type: String="Poems"): String {
-    return "processed/parsivar/$type/$ops"
+
+fun parsivar(ops: String): (String) -> String {
+    return { type -> "processed/parsivar/$type/$ops" }
 }
 

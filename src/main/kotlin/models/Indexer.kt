@@ -20,7 +20,7 @@ class Indexer(private val id: String) : Closeable {
 
     init {
         indexDirectory = FSDirectory.open(Path("indexes/$id"))
-        val analyzer = WhitespaceAnalyzer()
+        val analyzer = StandardAnalyzer()
         val config = IndexWriterConfig(analyzer)
             .apply {
                 openMode = IndexWriterConfig.OpenMode.CREATE

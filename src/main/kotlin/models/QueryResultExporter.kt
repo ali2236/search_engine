@@ -24,7 +24,7 @@ class QueryResultExporter {
                     val values = results[it]!![q].run {
                         listOf(precision, recall, fMeasure, MAP).map { it.toString() }
                     }
-                    listOf(it) + values
+                    listOf(it.replace('p', '`')) + values
                 }.toMutableList()
                 enginesResult.add(0, listOf("Search Engine", "Precision", "Recall", "F-Measure", "MAP"))
                 write(enginesResult)

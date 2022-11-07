@@ -10,10 +10,8 @@ class CsvExporter(val path: String, val separator: String = ",") {
     fun write(data: List<List<String>>) {
         val csvText = StringBuffer().apply {
             data.forEach { row ->
-                row.forEach { col ->
-                    append(col)
-                    append(separator)
-                }
+                val csvRow = row.joinToString(separator)
+                append(csvRow)
                 append('\n')
             }
         }

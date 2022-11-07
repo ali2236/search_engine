@@ -1,36 +1,39 @@
-import engines.BaseSearchEngine
+import engines.SearchEngine
 import models.*
 
 fun main(args: Array<String>) {
     val totalDocuments = DocumentDirectory("data/Poems").documents.size
 
     val engines = listOf(
-        BaseSearchEngine("SE0") { t -> "data/$t" },
-        BaseSearchEngine("SE1", hazm("NT--")),
-        BaseSearchEngine("SE1p", parsivar("NT--")),
-        BaseSearchEngine("SE2", hazm("NTR-")),
-        BaseSearchEngine("SE2p", parsivar("NTR-")),
-        BaseSearchEngine("SE3", hazm("NTRL")),
-        BaseSearchEngine("SE3p", parsivar("NTRL")),
-        BaseSearchEngine("SE4", hazm("NT-S")),
-        BaseSearchEngine("SE4p", hazm("NTRS")),
+        SearchEngine("SE0") { t -> "data/$t" },
+        SearchEngine("SE1", hazm("NT--")),
+        SearchEngine("SE1p", parsivar("NT--")),
+        SearchEngine("SE2", hazm("NTR-")),
+        SearchEngine("SE2p", parsivar("NTR-")),
+        SearchEngine("SE3", hazm("NTRL")),
+        SearchEngine("SE3p", parsivar("NTRL")),
+        SearchEngine("SE4", hazm("NT-S")),
+        SearchEngine("SE4p", hazm("NTRS")),
     ).onEach {
         // set to [true] if index exists
-        it.index(true)
+        it.index(skip=true)
     }
 
     // Test
     val ra = RelevanceAssessmentFile("data/RelevanceAssesment/RelevanceAssesment", totalDocuments)
     val assessor = RelevanceAssessor(ra)
+    val seExporter = AssessmentExporter()
+    val qExporter = QueryResultExporter()
 
     engines.forEach {
-        println("assessing ${it.getName()}")
+        val name = it.getName()
+        println("assessing $name")
         val queries = QueryDirectory(it.pathBuilder("Queries"))
-        assessor.test(it, queries)
-        println(assessor.results)
-        println(assessor.getMeanResult(it.getName()))
+        assessor.test(it, queries).let { results ->
+            seExporter.export(name, results)
+        }
     }
 
-
+    qExporter.export(assessor.results)
 
 }

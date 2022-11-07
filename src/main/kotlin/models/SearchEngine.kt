@@ -1,12 +1,35 @@
-package models
+package engines
 
-interface SearchEngine {
+import models.Indexer
+import org.apache.lucene.analysis.standard.StandardAnalyzer
+import org.apache.lucene.index.DirectoryReader
+import org.apache.lucene.queryparser.classic.QueryParser
+import org.apache.lucene.search.IndexSearcher
 
-    fun getName(): String
+class SearchEngine(private val indexName: String, val pathBuilder: (String) -> String) {
 
-    fun index(skip: Boolean)
+    private lateinit var indexDirectory: DirectoryReader
 
-    // return List of Result DocumentIds
-    fun query(query: String): List<String>
+     fun getName(): String = indexName
 
+     fun index(skip: Boolean) {
+        println("${getName()}: indexing...")
+        indexDirectory = Indexer(getName()).let {
+            if(!skip) {
+                it.index(pathBuilder("Poems"))
+            }
+            it.directory
+        }
+        println("${getName()}: indexing done!")
+    }
+
+     fun query(query: String): List<String> {
+        val searcher = IndexSearcher(indexDirectory)
+        val parser = QueryParser("content", StandardAnalyzer())
+        val q = parser.parse(query)
+
+        return searcher.search(q, 25).scoreDocs.map {
+            searcher.doc(it.doc).get("id")
+        }
+    }
 }

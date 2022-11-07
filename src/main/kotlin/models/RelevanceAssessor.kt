@@ -1,30 +1,26 @@
 package models
 
+import engines.SearchEngine
+
 class RelevanceAssessor(
     private val relevanceAssessment: RelevanceAssessmentFile,
 ) {
 
     val results = mutableMapOf<String, List<RelevanceResult>>()
 
-    fun test(searchEngine: SearchEngine, queries : QueryDirectory) {
-        results[searchEngine.getName()] = relevanceAssessment.assessments
+    fun test(searchEngine: SearchEngine, queries: QueryDirectory) : List<RelevanceResult> {
+        val r = relevanceAssessment.assessments
             .map { ra ->
                 val query = queries.get(ra.queryId).toString()
                 val results = searchEngine.query(query)
-                return@map RelevanceResult(
+                val rr = RelevanceResult(
                     ra.precision(results),
                     ra.recall(results),
                     ra.meanAveragePrecision(results),
                 )
+                rr
             }
-    }
-
-    fun getMeanResult(engine: String): RelevanceResult {
-        val result = results[engine]!!
-        return RelevanceResult(
-            result.map { it.precision }.average(),
-            result.map { it.recall }.average(),
-            result.map { it.MAP }.average(),
-        )
+        results[searchEngine.getName()] = r
+        return r
     }
 }

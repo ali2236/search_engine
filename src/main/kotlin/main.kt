@@ -35,5 +35,6 @@ fun main(args: Array<String>) {
     }
 
     qExporter.export(assessor.results)
+    AverageAssessmentExporter().export(assessor.results)
 
 }

@@ -2,6 +2,7 @@ import os
 import sys
 import parsivar
 import stopwords
+import datetime
 
 ops = sys.argv[1]
 dtype = sys.argv[2]
@@ -41,13 +42,21 @@ output = os.path.join(output, ops)
 if not os.path.exists(output):
     os.mkdir(output)
 documents = os.listdir(docs)
+start = datetime.datetime.now()
 if not os.path.exists(output):
     os.mkdir(output)
-    documents = os.listdir(docs)
-    for doc in documents:
-        with open(os.path.join(docs, doc), 'r', encoding='utf8') as d:
-            t = d.read()
-            pt = process(t)
-            with open(os.path.join(output, doc), 'w', encoding='utf8') as pd:
-                pd.write(pt)
-                print(f'{doc} processed')
+documents = os.listdir(docs)
+i = 0
+for doc in documents:
+    with open(os.path.join(docs, doc), 'r', encoding='utf8') as d:
+        t = d.read()
+        pt = process(t)
+        with open(os.path.join(output, doc), 'w', encoding='utf8') as pd:
+            pd.write(pt)
+            if i % 500 == 0:
+                print(f'{i} docs processed')
+            i += 1
+end = datetime.datetime.now()
+elapsed_time = end - start
+with open("times.txt", 'a', encoding='utf8') as t:
+    t.write(f'parsivar-{dtype}-{ops}: {elapsed_time} seconds\n')

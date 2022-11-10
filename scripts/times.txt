@@ -1,0 +1,8 @@
+hazm-Poems-NT--: 0:00:11.625094 seconds
+parsivar-Poems-NT--: 0:00:38.568312 seconds
+hazm-Poems-NTR-: 0:00:15.507067 seconds
+parsivar-Poems-NTR-: 0:00:31.342966 seconds
+hazm-Poems-NTRL: 0:00:25.028246 seconds
+parsivar-Poems-NTRL: 0:00:46.953275 seconds
+hazm-Poems-NT-S: 0:01:04.843591 seconds
+hazm-Poems-NTRS: 0:00:47.713187 seconds

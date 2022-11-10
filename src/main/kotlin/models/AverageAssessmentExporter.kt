@@ -23,7 +23,7 @@ class AverageAssessmentExporter {
             add(0, resultHeader)
         }
 
-        CsvExporter("results/avg.csv").apply {
+        CsvExporter("results/plot_queries/avg.csv").apply {
             write(resultTable)
         }
     }

@@ -4,25 +4,27 @@ import parsivar
 import stopwords
 
 ops = sys.argv[1]
-docs = f"../data/{sys.argv[2]}"
-output = f"../processed/parsivar/{sys.argv[2]}"
+dtype = sys.argv[2]
+docs = f"../PersianPoemsData/{dtype}"
+output = f"../processed/parsivar"
 
 stop_words = stopwords.get_stopwords()
+normalizer = parsivar.Normalizer()
+tokenizer = parsivar.Tokenizer()
+stemmer = parsivar.FindStems()
 
 
 def process(text):
     if "N" in ops:
-        text = parsivar.Normalizer().normalize(text)
+        text = normalizer.normalize(text)
 
-    tokens = parsivar.Tokenizer().tokenize_words(text)
+    tokens = tokenizer.tokenize_words(text)
 
     if "R" in ops:
-        stop_words = stopwords.get_stopwords()
         filtered_tokens = [w for w in tokens if w not in stop_words]
         tokens = filtered_tokens
 
     if "S" in ops or "L" in ops:
-        stemmer = parsivar.FindStems()
         stemmed_tokens = [stemmer.convert_to_stem(w) for w in tokens]
         tokens = stemmed_tokens
 
@@ -30,7 +32,15 @@ def process(text):
     return text
 
 
+if not os.path.exists(output):
+    os.mkdir(output)
+output = os.path.join(output, dtype)
+if not os.path.exists(output):
+    os.mkdir(output)
 output = os.path.join(output, ops)
+if not os.path.exists(output):
+    os.mkdir(output)
+documents = os.listdir(docs)
 if not os.path.exists(output):
     os.mkdir(output)
     documents = os.listdir(docs)

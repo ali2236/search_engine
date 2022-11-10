@@ -2,10 +2,10 @@ import engines.SearchEngine
 import models.*
 
 fun main(args: Array<String>) {
-    val totalDocuments = DocumentDirectory("data/Poems").documents.size
+    val totalDocuments = DocumentDirectory("PersianPoemsData/Poems").documents.size
 
     val engines = listOf(
-        SearchEngine("SE0") { t -> "data/$t" },
+        SearchEngine("SE0") { t -> "PersianPoemsData/$t" },
         SearchEngine("SE1", hazm("NT--")),
         SearchEngine("SE1p", parsivar("NT--")),
         SearchEngine("SE2", hazm("NTR-")),
@@ -20,7 +20,7 @@ fun main(args: Array<String>) {
     }
 
     // Test
-    val ra = RelevanceAssessmentFile("data/RelevanceAssesment/RelevanceAssesment", totalDocuments)
+    val ra = RelevanceAssessmentFile("PersianPoemsData/RelevanceAssesment/RelevanceAssesment", totalDocuments)
     val assessor = RelevanceAssessor(ra)
     val seExporter = AssessmentExporter()
     val qExporter = QueryResultExporter()

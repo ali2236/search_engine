@@ -1,4 +1,6 @@
-Ali Ghanbari - 40110524
+# Persian Poem Search Engine
+
+IR Project #1
 
 ### Requirements
 - python 3.9
